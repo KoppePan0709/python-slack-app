@@ -15,6 +15,11 @@
 			"text": {
 				"type": "mrkdwn",
 				"text": ":memo: *会議資料*\nhttps://ibm.box.com/s/ntqmdpzb9l6z5rnuxb2m1imzn8ylguyp\n:paperclip2:  *添付資料置き場*:\nhttps://ibm.box.com/s/fu62shtzne5oklr6skpw87i4szcw33oc\n以下の担当者の方、共有事項がありましたら資料の更新をお願いいたします。"
+			},
+            "accessory": {
+				"type": "image",
+				"image_url": "https://box-slack-app-imagebucket.s3-ap-northeast-1.amazonaws.com/image/logo.png",
+				"alt_text": "computer thumbnail"
 			}
 		},
 		{

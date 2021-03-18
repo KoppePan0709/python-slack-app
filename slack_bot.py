@@ -7,8 +7,8 @@ from slack_sdk.errors import SlackApiError
 
 
 def authorize_box_client():
-    #slack_config = json.load(open('slack_config.json'))
-    slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
+    slack_config = json.load(open('slack_config.json'))
+    #slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
     client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
     
     return client
@@ -27,9 +27,10 @@ def main(boxnote_url, weblink_url):
     
     client = authorize_box_client()
     
-    #msg_template = json.load(open('slack_msg_template.json'))
+    # msg_template = json.load(open('test.json'))
+    # msg_template = json.load(open('slack_msg_template.json'))
     msg_template = json.load(open('/home/ec2-user/python-slack-app/slack_msg_template.json'))
-    #slack_config = json.load(open('slack_config.json'))
+    # slack_config = json.load(open('slack_config.json'))
     slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
     # channel_id = slack_config['CHANNEL_ID_PROD']
     channel_id = slack_config['CHANNEL_ID_STG']
