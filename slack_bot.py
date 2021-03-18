@@ -32,8 +32,8 @@ def main(boxnote_url, weblink_url):
     msg_template = json.load(open('/home/ec2-user/python-slack-app/slack_msg_template.json'))
     # slack_config = json.load(open('slack_config.json'))
     slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
-    # channel_id = slack_config['CHANNEL_ID_PROD']
-    channel_id = slack_config['CHANNEL_ID_STG']
+    channel_id = slack_config['CHANNEL_ID_PROD']
+    # channel_id = slack_config['CHANNEL_ID_STG']
     
     mtg_date = get_next_mtg_date()
     msg_template['blocks'][0]['text']['text'] = "*{} SE定例開催準備*".format(mtg_date)
