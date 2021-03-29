@@ -13,14 +13,16 @@ from boxsdk import OAuth2, Client
 
 SE_FOLDER_ID = '84417881026'  # SE定例
 DOC_FOLDER_ID = '132869275246'  # 添付資料
+CONFIG_PATH = '/home/ec2-user/python-slack-app/box_config.json'
+# CONFIG_PATH = 'box_config.json' 
+
 
 class boxClient(object):
     # Authorize Box Client
     def authorize_box_client(self):
         print('Box Client 設定中')
         try:
-            config = json.load(open('/home/ec2-user/python-slack-app/box_config.json'))
-            # config = json.load(open('box_config.json'))
+            config = json.load(open(CONFIG_PATH))
             appAuth = config["boxAppSettings"]["appAuth"]
             privateKey = appAuth["privateKey"]
             passphrase = appAuth["passphrase"]
