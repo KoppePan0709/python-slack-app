@@ -35,6 +35,7 @@ def GetNextThursday():
     diff_days = datetime.timedelta(days=diff)
 
     next_thu = dt + diff_days
+    locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     next_thu = next_thu.strftime('%m月%d日（%a）')
     return next_thu
 
