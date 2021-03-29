@@ -23,6 +23,23 @@ def get_next_mtg_date():
     return dt
 
 
+def GetNextThursday():
+    dt = datetime.datetime.now()
+    current_weekday = dt.weekday()
+    target_weekday = 3  # 0:月曜日 1:火曜日 ... 6:日曜日
+
+    if current_weekday < target_weekday:
+        diff = target_weekday - current_weekday
+    else:
+        diff = target_weekday - current_weekday + 7
+    diff_days = datetime.timedelta(days=diff)
+
+    next_thu = dt + diff_days
+    next_thu = next_thu.strftime('%m月%d日（%a）')
+    return next_thu
+
+
+
 def main(boxnote_url, weblink_url):
     
     client = authorize_box_client()
@@ -35,7 +52,7 @@ def main(boxnote_url, weblink_url):
     channel_id = slack_config['CHANNEL_ID_PROD']
     # channel_id = slack_config['CHANNEL_ID_STG']
     
-    mtg_date = get_next_mtg_date()
+    mtg_date = GetNextThursday()
     msg_template['blocks'][0]['text']['text'] = "*{} SE定例開催準備*".format(mtg_date)
     msg_template['blocks'][2]['text']['text'] = ":paper:  *会議資料*\n{}\n:paperclip2:  *添付資料置き場*:\n{}\n以下の担当者の方、共有事項がありましたら資料の更新をお願いいたします。".format(boxnote_url, weblink_url)
 
