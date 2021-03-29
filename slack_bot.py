@@ -7,8 +7,8 @@ from slack_sdk.errors import SlackApiError
 
 
 def authorize_box_client():
-    slack_config = json.load(open('slack_config.json'))
-    #slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
+    #slack_config = json.load(open('slack_config.json'))
+    slack_config = json.load(open('/home/ec2-user/python-slack-app/slack_config.json'))
     client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
     
     return client
