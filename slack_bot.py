@@ -15,8 +15,8 @@ TIME_STAMP_PATH = '/home/ec2-user/python-slack-app/timestamp.json'
 
 msg_template = json.load(open(MSG_TMP_PATH))
 slack_config = json.load(open(CONFIG_PATH))
-channel_id = slack_config['CHANNEL_ID_PROD']
-# channel_id = slack_config['CHANNEL_ID_STG']
+# channel_id = slack_config['CHANNEL_ID_PROD']
+channel_id = slack_config['CHANNEL_ID_STG']
 client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
 
 

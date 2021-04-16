@@ -18,7 +18,7 @@
 			},
             "accessory": {
 				"type": "image",
-				"image_url": "https://box-slack-app-imagebucket.s3-ap-northeast-1.amazonaws.com/image/logo.png",
+				"image_url": "https://box-slack-app-imagebucket.s3-ap-northeast-1.amazonaws.com/image/kyndryl_SE.png",
 				"alt_text": "computer thumbnail"
 			}
 		},
