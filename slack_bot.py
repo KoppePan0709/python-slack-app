@@ -9,14 +9,16 @@ from slack_sdk.errors import SlackApiError
 MSG_TMP_PATH = '/home/ec2-user/python-slack-app/slack_msg_template.json'
 CONFIG_PATH = '/home/ec2-user/python-slack-app/slack_config.json'
 TIME_STAMP_PATH = '/home/ec2-user/python-slack-app/timestamp.json'
+NOTIFICATION_TMP_PATH = '/home/ec2-user/python-slack-app/slack_notification_msg_template.json'
 # MSG_TMP_PATH = 'slack_msg_template.json'
 # CONFIG_PATH = 'slack_config.json'
 # TIME_STAMP_PATH = 'timestamp.json'
+# NOTIFICATION_TMP_PATH = 'slack_notification_msg_template.json'
 
 msg_template = json.load(open(MSG_TMP_PATH))
 slack_config = json.load(open(CONFIG_PATH))
-channel_id = slack_config['CHANNEL_ID_PROD']
-# channel_id = slack_config['CHANNEL_ID_STG']
+# channel_id = slack_config['CHANNEL_ID_PROD']
+channel_id = slack_config['CHANNEL_ID_STG']
 client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
 
 
@@ -64,7 +66,7 @@ def main(boxnote_url, weblink_url):
 
 
 def send_reminder():
-    
+
     post_data = json.load(open(TIME_STAMP_PATH))
     mtg_date = get_next_thursday()
     msg_template['blocks'][0]['text']['text'] = "*{} SE定例開催準備【リマインド】*".format(mtg_date)
@@ -84,11 +86,34 @@ def send_reminder():
         print(f"Got an error: {e.response['error']}")
 
 
+def send_notification():
+    notification_msg_template = json.load(open(NOTIFICATION_TMP_PATH))
+    dt = datetime.datetime.now()
+    meeting_date = dt.strftime('%dth %b %Y')
+    meeting_link = "https://ibm.webex.com/ibm/j.php?MTID=m7c69294467d20a68f10b0105f71c2ea8"
+    post_data = json.load(open(TIME_STAMP_PATH))
+    notification_msg_template['blocks'][2]['text']['text'] = " :webex:  *<{meeting_link}|参加はこちらから>*\n :paper:  <{boxnote_url}|会議資料>\n :folder:  <{weblink_url}|添付資料>".format(meeting_link=meeting_link, boxnote_url=post_data['boxnote_url'], weblink_url=post_data['weblink_url'])
+    notification_msg_template['blocks'][3]['elements'][0]['text'] = " :calendar: *{} 17:00-18:00pm*".format(meeting_date)
+    print(json.dumps(notification_msg_template, indent=2))
+    
+    try:
+        response = client.chat_postMessage(
+            channel=channel_id,
+            blocks=notification_msg_template['blocks']
+            )
+        print('ok = {}'.format(response['ok']))
+    except SlackApiError as e:
+        # You will get a SlackApiError if "ok" is False
+        assert e.response["ok"] is False
+        assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
+        print(f"Got an error: {e.response['error']}")
+
 
 
 
 if __name__ == '__main__':
     boxnote_url = 'https://example.com'
     weblink_url = 'https://example.com'
-    main(boxnote_url, weblink_url)
-    send_reminder()
+    # main(boxnote_url, weblink_url)
+    # send_reminder()
+    send_notification()

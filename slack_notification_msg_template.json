@@ -1,0 +1,35 @@
+{
+    "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": " :idealightbulb_mcbot: *SE定例のお時間です*<!channel>"
+            }
+        },
+        {
+            "type": "divider"
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": " :webex: *<https://ibm.webex.com/ibm/j.php?MTID=m7c69294467d20a68f10b0105f71c2ea8|参加はこちらから>*\n :paper: <https://ibm.webex.com/ibm/j.php?MTID=m7c69294467d20a68f10b0105f71c2ea8|会議資料>\n :folder: <https://ibm.webex.com/ibm/j.php?MTID=m7c69294467d20a68f10b0105f71c2ea8|添付資料>"
+            },
+            "accessory": {
+                "type": "image",
+                "image_url": "https://box-slack-app-imagebucket.s3-ap-northeast-1.amazonaws.com/image/kyndryl_SE.png",
+                "alt_text": "calendar thumbnail"
+            }
+        },
+        {
+            "type": "context",
+            "elements": [
+                {
+                    "type": "mrkdwn",
+                    "text": " :calender: *2021 Apr 21st 17:00-18:00pm*"
+                }
+            ]
+        }
+    ]
+}
