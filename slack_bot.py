@@ -23,11 +23,13 @@ client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
 
 
 def get_next_thursday():
+    # 翌木曜日の日付を取得
+    # 実行日が木曜の場合は当日日付を返す。
     dt = datetime.datetime.now()
     current_weekday = dt.weekday()
     target_weekday = 3  # 0:月曜日 1:火曜日 ... 6:日曜日
 
-    if current_weekday < target_weekday:
+    if current_weekday <= target_weekday:
         diff = target_weekday - current_weekday
     else:
         diff = target_weekday - current_weekday + 7
@@ -36,6 +38,7 @@ def get_next_thursday():
     next_thu = dt + diff_days
     locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     next_thu = next_thu.strftime('%m月%d日（%a）')
+    print(next_thu)
     return next_thu
 
 
@@ -112,8 +115,9 @@ def send_notification():
 
 
 if __name__ == '__main__':
-    boxnote_url = 'https://example.com'
-    weblink_url = 'https://example.com'
+    # boxnote_url = 'https://example.com'
+    # weblink_url = 'https://example.com'
     # main(boxnote_url, weblink_url)
     # send_reminder()
-    send_notification()
+    # send_notification()
+    # get_next_thursday()
