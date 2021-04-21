@@ -14,6 +14,7 @@ from boxsdk import OAuth2, Client
 SE_FOLDER_ID = '84417881026'  # SE定例
 DOC_FOLDER_ID = '132869275246'  # 添付資料
 CONFIG_PATH = '/home/ec2-user/python-slack-app/box_config.json'
+LOG_PREFIX = 'box_bot.py'
 # CONFIG_PATH = 'box_config.json' 
 
 
@@ -78,24 +79,24 @@ class boxClient(object):
         
 
 def GetAllItemsInFolder(client, folder_id):
-    print('GetAllItemsInFolder: Folder {} 内のアイテムを捜索中'.format(folder_id))
+    print(LOG_PREFIX, 'GetAllItemsInFolder: Folder {} 内のアイテムを捜索中'.format(folder_id))
     items = client.folder(folder_id=folder_id).get_items(sort='date')  # folder内のitemを全て取得
     return items
     
 
 def GetLatestFolderID(client, folder_id):
-    print('GetLatestFolderID： Folder {} 内の最新アイテムを捜索中'.format(folder_id))
+    print(LOG_PREFIX, 'GetLatestFolderID： Folder {} 内の最新アイテムを捜索中'.format(folder_id))
     name = 0
     items = client.folder(folder_id=folder_id).get_items(sort='date')
     for item in items:
         if item.name.isdecimal() and int(item.name) > name:
             latest_folder_id = item.id
-    print('GetLatestFolderID： Folder {}　内の最新アイテムID {}'.format(folder_id, latest_folder_id))
+    print(LOG_PREFIX, 'GetLatestFolderID： Folder {}　内の最新アイテムID {}'.format(folder_id, latest_folder_id))
     return latest_folder_id
 
 
 def GetDocmentFolder(items):
-    print('GetDocmentFolder: 関連資料フォルダの情報を検索中')
+    print(LOG_PREFIX, 'GetDocmentFolder: 関連資料フォルダの情報を検索中')
     for item in items:
         print(item.name)
         if item.name == '関連資料':
@@ -112,16 +113,16 @@ def CreateSubFolder(client, dest_folder_id, folder_name):
     items_in_dest_folder = GetAllItemsInFolder(client, dest_folder_id)
     for item in items_in_dest_folder:
         if item.name == folder_name:
-            print('The same name folder already exists. ID： {}'.format(item.id))
+            print(LOG_PREFIX, 'The same name folder already exists. ID： {}'.format(item.id))
             return item.id
 
     subfolder = client.folder(dest_folder_id).create_subfolder(folder_name)
-    print('Created subfolder with ID {0}'.format(subfolder.id))
+    print(LOG_PREFIX, 'Created subfolder with ID {0}'.format(subfolder.id))
     return subfolder.id
 
 
 def GetLatestItem(items):
-    print('GetLatestItem: 最新のアイテムを捜索中')
+    print(LOG_PREFIX, 'GetLatestItem: 最新のアイテムを捜索中')
     latest_folder_name = 0
     for item in items:
         if item.name.isdecimal() and int(item.name) > latest_folder_name:
@@ -130,7 +131,7 @@ def GetLatestItem(items):
                 'id': item.id,
                 'object_type': item.object_type
                 } 
-    print('GetLatestItem: 最新アイテム情報 name: {}, id: {}, type: {}'.format(latest_item['name'], latest_item['id'], latest_item['object_type']))
+    print(LOG_PREFIX, 'GetLatestItem: 最新アイテム情報 name: {}, id: {}, type: {}'.format(latest_item['name'], latest_item['id'], latest_item['object_type']))
     return latest_item
 
 
@@ -138,15 +139,15 @@ def CopyFolder(client, target_folder_id, dest_folder_id, new_folder_name):
     items_in_dest_folder = GetAllItemsInFolder(client, dest_folder_id)
     for item in items_in_dest_folder:
         if item.name == new_folder_name:
-            print('The same name folder already exists. ID： {}'.format(item.id))
+            print(LOG_PREFIX, 'The same name folder already exists. ID： {}'.format(item.id))
             return item.id
 
-    print('実行中：CopyFolder')
+    print(LOG_PREFIX, '実行中：CopyFolder')
     folder_to_copy = client.folder(target_folder_id)
     dest_folder = client.folder(dest_folder_id)
     
     folder_copy = folder_to_copy.copy(dest_folder, name=new_folder_name)
-    print('完了：CopyFolder  Folder {} has been copied into {}'.format(folder_copy.name, folder_copy.parent.name))
+    print(LOG_PREFIX, '完了：CopyFolder  Folder {} has been copied into {}'.format(folder_copy.name, folder_copy.parent.name))
     
     return folder_copy.id
 
@@ -164,25 +165,26 @@ def GetNextThursday():
 
     next_thu = dt + diff_days
     next_thu = next_thu.strftime("%Y%m%d")
+    print(LOG_PREFIX, 'The next meeting date is {}'.format(next_thu))
     return next_thu
 
 
 def CreateFolderSharedLink(client, folder_id):
     url = client.folder(folder_id).get_shared_link(access='collaborators')
-    print('The file shared link URL is: {0}'.format(url))
+    print(LOG_PREFIX, 'The folder shared link URL is: {0}'.format(url))
     return url
 
 
 def CreateFileSharedLink(client, file_id):
     url = client.file(file_id).get_shared_link(access='collaborators')
-    print('The file shared link URL is: {0}'.format(url))
+    print(LOG_PREFIX, 'The file shared link URL is: {0}'.format(url))
     return url
 
 
 
 def CreateWebLink(client, folder_id):
     web_link = client.folder(folder_id).create_web_link('https://example.com','添付資料')
-    print('Web Link url is {0} and its description is {1}'.format(web_link.url, web_link.description))
+    print(LOG_PREFIX, 'Web Link url is {0} and its description is {1}'.format(web_link.url, web_link.description))
 
     return web_link.id
 
@@ -190,33 +192,33 @@ def CreateWebLink(client, folder_id):
 def GetWebLink(items):
     for item in items:
         if item.object_type == 'web_link':
-            print('Web Link ID: {}'.format(item.id))
+            print(LOG_PREFIX, 'Web Link ID: {}'.format(item.id))
             return item.id
 
 def GetBoxNoteId(items):
     for item in items:
         if 'SE定例' in item.name:
-            print('SE定例 Boxnote ID: {}'.format(item.id))
+            print(LOG_PREFIX, 'SE定例 Boxnote ID: {}'.format(item.id))
             return item.id
         else: 
-            print(item.name)
+            print(LOG_PREFIX, 'There is no item named SE定例')
 
 
 def UpdateFileName(client, file_id, name):
     updated_file = client.file(file_id).update_info({'name': '{}_SE定例.boxnote'.format(name)})
     # updated_file = client.file(file_id).update_info({'name': 'SE定例.boxnote'})
-    print('Boxnote name has been updated to {}'.format(updated_file.name))
+    print(LOG_PREFIX, 'Boxnote name has been updated to {}'.format(updated_file.name))
     return updated_file
 
 
 def UpdateWebLink(client, web_link_id, url):
     updated_web_link = client.web_link(web_link_id=web_link_id).update_info({'url': url})
-    print('Web Link has been updated to {}'.format(url))
+    print(LOG_PREFIX, 'Web Link has been updated to {}'.format(url))
     return updated_web_link
 
 
 def main():
-    print('main.py 実行中')
+    print(LOG_PREFIX, '実行中')
     client = boxClient().authorize_box_client()
     all_items_in_SE_Folder = GetAllItemsInFolder(client, SE_FOLDER_ID)  # SE定例フォルダの全アイテム取得
     latest_item_in_SE_Folder = GetLatestItem(all_items_in_SE_Folder)  # SE定例フォルダ内の最新のフォルダを取得
@@ -228,7 +230,6 @@ def main():
     web_link_id = GetWebLink(items_in_new_folder)  #新規作成フォルダ内のWebLinkIDを取得 
     if not web_link_id:
         web_link_id = CreateWebLink(client, new_folder_id)
-    print(web_link_id)
     UpdateFileName(client, boxnote_id, new_folder_name)
     doc_folder_id = CreateSubFolder(client, DOC_FOLDER_ID, new_folder_name)  #新しい日付用添付資料フォルダの作成
     boxnote_shared_url = CreateFileSharedLink(client, boxnote_id)

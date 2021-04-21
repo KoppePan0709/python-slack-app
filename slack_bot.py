@@ -17,10 +17,10 @@ NOTIFICATION_TMP_PATH = '/home/ec2-user/python-slack-app/slack_notification_msg_
 
 msg_template = json.load(open(MSG_TMP_PATH))
 slack_config = json.load(open(CONFIG_PATH))
-channel_id = slack_config['CHANNEL_ID_PROD']
-# channel_id = slack_config['CHANNEL_ID_STG']
+# channel_id = slack_config['CHANNEL_ID_PROD']
+channel_id = slack_config['CHANNEL_ID_STG']
 client = WebClient(token=slack_config['SLACK_BOT_TOKEN'])
-
+LOG_PREFIX = 'slack_bot.py'
 
 def get_next_thursday():
     # 翌木曜日の日付を取得
@@ -60,7 +60,7 @@ def main(boxnote_url, weblink_url):
         with open(TIME_STAMP_PATH, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print('ok = {}'.format(response['ok']), 'ts = {}'.format(response['ts']))
+        print(LOG_PREFIX, 'ok = {}'.format(response['ok']), 'ts = {}'.format(response['ts']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
@@ -81,7 +81,7 @@ def send_reminder():
             thread_ts=post_data['ts'],
             blocks=msg_template['blocks']
             )
-        print('ok = {}'.format(response['ok']))
+        print(LOG_PREFIX, 'ok = {}'.format(response['ok']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
@@ -104,7 +104,7 @@ def send_notification():
             channel=channel_id,
             blocks=notification_msg_template['blocks']
             )
-        print('ok = {}'.format(response['ok']))
+        print(LOG_PREFIX, 'ok = {}'.format(response['ok']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
