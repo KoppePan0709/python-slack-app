@@ -1,6 +1,7 @@
 import datetime
 import json
 import locale
+import sys
 
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -38,7 +39,6 @@ def get_next_thursday():
     next_thu = dt + diff_days
     locale.setlocale(locale.LC_TIME, 'ja_JP.UTF-8')
     next_thu = next_thu.strftime('%m月%d日（%a）')
-    print(next_thu)
     return next_thu
 
 
@@ -60,12 +60,12 @@ def main(boxnote_url, weblink_url):
         with open(TIME_STAMP_PATH, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(LOG_PREFIX, 'ok = {}'.format(response['ok']), 'ts = {}'.format(response['ts']))
+        print(LOG_PREFIX, sys._getframe().f_code.co_name, 'ok = {}'.format(response['ok']), 'ts = {}'.format(response['ts']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
         assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print(f"Got an error: {e.response['error']}")
+        print(LOG_PREFIX, sys._getframe().f_code.co_name, f"Got an error: {e.response['error']}")
 
 
 def send_reminder():
@@ -81,12 +81,12 @@ def send_reminder():
             thread_ts=post_data['ts'],
             blocks=msg_template['blocks']
             )
-        print(LOG_PREFIX, 'ok = {}'.format(response['ok']))
+        print(LOG_PREFIX, sys._getframe().f_code.co_name, 'ok = {}'.format(response['ok']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
         assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print(f"Got an error: {e.response['error']}")
+        print(LOG_PREFIX, f"Got an error: {e.response['error']}")
 
 
 def send_notification():
@@ -97,23 +97,21 @@ def send_notification():
     post_data = json.load(open(TIME_STAMP_PATH))
     notification_msg_template['blocks'][2]['text']['text'] = " :webex:  *<{meeting_link}|参加はこちらから>*\n :paper:  <{boxnote_url}|会議資料>\n :folder:  <{weblink_url}|添付資料>".format(meeting_link=meeting_link, boxnote_url=post_data['boxnote_url'], weblink_url=post_data['weblink_url'])
     notification_msg_template['blocks'][3]['elements'][0]['text'] = " :calendar: *{} 17:00-18:00pm*".format(meeting_date)
-    print(json.dumps(notification_msg_template, indent=2))
     
     try:
         response = client.chat_postMessage(
             channel=channel_id,
             blocks=notification_msg_template['blocks']
             )
-        print(LOG_PREFIX, 'ok = {}'.format(response['ok']))
+        print(LOG_PREFIX, sys._getframe().f_code.co_name, 'ok = {}'.format(response['ok']))
     except SlackApiError as e:
         # You will get a SlackApiError if "ok" is False
         assert e.response["ok"] is False
         assert e.response["error"]  # str like 'invalid_auth', 'channel_not_found'
-        print(f"Got an error: {e.response['error']}")
+        print(LOG_PREFIX, sys._getframe().f_code.co_name, f"Got an error: {e.response['error']}")
 
 
 
 
 if __name__ == '__main__':
-    get_next_thursday()
     pass

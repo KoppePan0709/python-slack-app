@@ -21,7 +21,7 @@ LOG_PREFIX = 'box_bot.py'
 class boxClient(object):
     # Authorize Box Client
     def authorize_box_client(self):
-        print('Box Client 設定中')
+        print(LOG_PREFIX, 'Box Client 設定中')
         try:
             config = json.load(open(CONFIG_PATH))
             appAuth = config["boxAppSettings"]["appAuth"]
@@ -206,7 +206,6 @@ def GetBoxNoteId(items):
 
 def UpdateFileName(client, file_id, name):
     updated_file = client.file(file_id).update_info({'name': '{}_SE定例.boxnote'.format(name)})
-    # updated_file = client.file(file_id).update_info({'name': 'SE定例.boxnote'})
     print(LOG_PREFIX, 'Boxnote name has been updated to {}'.format(updated_file.name))
     return updated_file
 
