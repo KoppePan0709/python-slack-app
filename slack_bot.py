@@ -115,9 +115,5 @@ def send_notification():
 
 
 if __name__ == '__main__':
-    # boxnote_url = 'https://example.com'
-    # weblink_url = 'https://example.com'
-    # main(boxnote_url, weblink_url)
-    # send_reminder()
-    # send_notification()
-    # get_next_thursday()
+    get_next_thursday()
+    pass
